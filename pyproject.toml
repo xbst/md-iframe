@@ -1,13 +1,26 @@
 [project]
-name = "pinout-embed"
-version = "0.1.0"
-description = "Markdown extension for embedding interactive pinouts on markdown docs sites."
+name = "md-iframe"
+version = "0.2.0"
+description = "Markdown extension that embeds HTML pages as auto-sizing iframes on MkDocs and Zensical sites."
 readme = "README.md"
 license = "GPL-3.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.9"
+dependencies = ["markdown>=3.3"]
+
+[project.urls]
+Source = "https://github.com/xbst/md-iframe"
+
+# `pinout_embed` keeps existing `markdown_extensions: - pinout_embed` configs
+# working. It is an entry point only: this distribution must not ship a
+# pinout_embed.py, which belongs to the pinout-embed compatibility package.
+[project.entry-points."markdown.extensions"]
+md_iframe = "md_iframe:IframeExtension"
+pinout_embed = "md_iframe:IframeExtension"
 
 [tool.setuptools]
-py-modules = ["pinout_embed"]
+py-modules = ["md_iframe"]
 
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
