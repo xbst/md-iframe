@@ -55,6 +55,11 @@ _SELECTOR = "iframe." + EMBED_CLASS + ",iframe." + LEGACY_EMBED_CLASS
 # ``mdIframeHeight`` or as PinConnect's ``pinconnectHeight``; newer pinouts
 # send both in one message.
 #
+# The listener is added once per window, but the second block runs every time
+# the script does: Material's and Zensical's instant navigation swap in a new
+# page and run its scripts again without a reload, and that page's embeds still
+# need checking.  Each iframe is marked once checked.
+#
 # The second block flags a broken embed instead of shipping a silently-blank
 # iframe: a same-origin HEAD that returns 404 means the target file is missing
 # (a typo, or the pinout was never generated), so the iframe is replaced with a
@@ -64,7 +69,7 @@ _SELECTOR = "iframe." + EMBED_CLASS + ",iframe." + LEGACY_EMBED_CLASS
 _LISTENER_SCRIPT = (
     "\n<script>\n"
     "(function(){\n"
-    "  if(window.__mdIframe)return;window.__mdIframe=true;\n"
+    "  if(!window.__mdIframe){window.__mdIframe=true;\n"
     "  window.addEventListener('message',function(e){\n"
     "    var d=e.data;\n"
     "    if(!d||typeof d!=='object')return;\n"
@@ -85,8 +90,9 @@ _LISTENER_SCRIPT = (
     "        break;\n"
     "      }\n"
     "    }\n"
-    "  });\n"
+    "  });}\n"
     "  Array.prototype.forEach.call(document.querySelectorAll('" + _SELECTOR + "'),function(f){\n"
+    "    if(f.dataset.mdIframeChecked)return;f.dataset.mdIframeChecked='1';\n"
     "    var src=f.getAttribute('src');if(!src)return;\n"
     "    fetch(src,{method:'HEAD'}).then(function(r){\n"
     "      if(r.status!==404)return;\n"
