@@ -20,4 +20,6 @@ Then embed a page:
 ![Board pinout](board.pinout.html){ type=iframe style="min-height:60vh;width:100%" }
 ```
 
-md-iframe replaces pinout-embed. Existing sites keep working unchanged: `{ type=application/pinout }` is still recognized, and `- pinout_embed` still loads this extension.
+Documentation, including the auto-height protocol an embedded page uses to size its iframe: **<https://doctools.isiks.tech/md-iframe/>**.
+
+md-iframe replaces pinout-embed. Existing sites keep working unchanged: `{ type=application/pinout }` is still recognized, and `- pinout_embed` still loads this extension. See [Migrating from the old names](https://doctools.isiks.tech/migration/).
