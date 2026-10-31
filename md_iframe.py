@@ -75,7 +75,7 @@ _LISTENER_SCRIPT = (
 )
 
 
-class PinoutTreeprocessor(Treeprocessor):
+class IframeTreeprocessor(Treeprocessor):
     def run(self, root: Element) -> None:
         for img in root.iter("img"):
             if img.get("type") != "application/pinout":
@@ -124,7 +124,7 @@ class PinoutTreeprocessor(Treeprocessor):
             img.text = ""
 
 
-class PinoutHeightPostprocessor(Postprocessor):
+class IframeHeightPostprocessor(Postprocessor):
     """Append the auto-height listener once, if the page has any pinout iframe."""
 
     def run(self, text: str) -> str:
@@ -133,7 +133,7 @@ class PinoutHeightPostprocessor(Postprocessor):
         return text
 
 
-class PinoutExtension(Extension):
+class IframeExtension(Extension):
     def extendMarkdown(self, md):
         # Negative priority so this runs AFTER the host's relative-path pass.
         # MkDocs' `relpath` treeprocessor (priority 0) rewrites relative links,
@@ -144,12 +144,12 @@ class PinoutExtension(Extension):
         # iframe. Zensical rewrites every element's src regardless of order, so
         # it is unaffected either way.
         md.treeprocessors.register(
-            PinoutTreeprocessor(md), "pinout_embed", -5
+            IframeTreeprocessor(md), "md_iframe", -5
         )
         md.postprocessors.register(
-            PinoutHeightPostprocessor(md), "pinout_embed_height", 1
+            IframeHeightPostprocessor(md), "md_iframe_height", 1
         )
 
 
 def makeExtension(**kwargs):
-    return PinoutExtension(**kwargs)
+    return IframeExtension(**kwargs)
